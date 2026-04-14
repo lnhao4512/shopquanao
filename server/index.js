@@ -60,8 +60,12 @@ app.get('/hello', (req, res) => {
 
 // ── Error handling ───────────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error('Server error:', err);
-  res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
+  console.error('SERVER CRASH:', err);
+  res.status(500).json({ 
+    success: false, 
+    message: 'Server error: ' + (err.message || 'Unknown error'),
+    error: process.env.VERCEL ? 'Check Vercel Runtime Logs for full stack trace' : err.stack
+  });
 });
 
 module.exports = app;

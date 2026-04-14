@@ -25,8 +25,10 @@ if (!uri) {
 mongoose
   .connect(uri)
   .then(() => {
-    console.log("Connected to " + uri);
+    console.log("SUCCESS: Database connected successfully to " + (uri.includes('@') ? uri.split('@')[1] : uri));
   })
   .catch((err) => {
-    console.error("Database connection error:", err);
+    console.error("FATAL ERROR: Database connection failed!");
+    console.error("URI attempted:", uri.replace(/:([^@]+)@/, ':****@')); // Hide password in logs
+    console.error("Error Detail:", err.message);
   });
