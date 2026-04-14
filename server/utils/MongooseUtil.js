@@ -19,22 +19,43 @@ if (!uri) {
   }
 }
 
-let conn = null;
+let cached = global.mongoose;
 
-async function connectDB() {
-    if (conn) return conn;
-    
-    console.log("Starting database connection attempt...");
-    conn = await mongoose.connect(uri, {
-        bufferCommands: false, // Disable buffering to catch connection issues immediately
-        connectTimeoutMS: 15000,
-        socketTimeoutMS: 30000
-    });
-    console.log("SUCCESS: Database connected successfully.");
-    return conn;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
-// Still initiate connection at top level
-connectDB().catch(err => console.error("Initial connection failed:", err.message));
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    console.log("Creating new database connection promise...");
+    const opts = {
+      bufferCommands: true, // MUST be true for serverless stability
+      connectTimeoutMS: 20000,
+      socketTimeoutMS: 45000,
+    };
+
+    cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
+      console.log("SUCCESS: Database connected.");
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null; // Reset if failed so we can try again
+    console.error("Connection failed during await:", e.message);
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+// Initial call
+connectDB().catch(err => console.error("Startup DB error:", err.message));
 
 module.exports = { connectDB };
