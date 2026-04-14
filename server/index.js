@@ -29,9 +29,12 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
-});
+// Only listen if NOT on Vercel
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+  });
+}
 
 // ── Middlewares ──────────────────────────────────────────────────────────────
 const bodyParser = require('body-parser');
@@ -51,9 +54,9 @@ const path = require('path');
 
 // ── Serving static files ─────────────────────────────────────────────────────
 // Customer build
-app.use(express.static(path.join(__dirname, '../client-customer/build')));
+app.use(express.static(path.join(__dirname, '../public')));
 // Admin build (served at /admin)
-app.use('/admin', express.static(path.join(__dirname, '../client-admin/build')));
+app.use('/admin', express.static(path.join(__dirname, '../public/admin')));
 
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/admin',    require('./api/admin.js'));
@@ -67,12 +70,12 @@ app.get('/hello', (req, res) => {
 
 // Admin SPA routing - fallback to admin/index.html
 app.get('/admin/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client-admin/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../public/admin', 'index.html'));
 });
 
-// Customer SPA routing - fallback to customer/index.html
+// Customer SPA routing - fallback to index.html
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client-customer/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 // ── Error handling ───────────────────────────────────────────────────────────
