@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "npm install --prefix client-customer && npm run build --prefix client-customer && npm install --prefix client-admin && npm run build --prefix client-admin && npm install --prefix server",
+    "start": "node server/index.js"
+  },
   "dependencies": {
     "axios": "^1.13.6",
     "cross-env": "^10.1.0",

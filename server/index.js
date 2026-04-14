@@ -47,13 +47,32 @@ app.use(function (req, res, next) {
   next();
 });
 
+const path = require('path');
+
+// ── Serving static files ─────────────────────────────────────────────────────
+// Customer build
+app.use(express.static(path.join(__dirname, '../client-customer/build')));
+// Admin build (served at /admin)
+app.use('/admin', express.static(path.join(__dirname, '../client-admin/build')));
+
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/admin',    require('./api/admin.js'));
 app.use('/api/customer', require('./api/customer.js'));
 app.use('/api/customer', require('./api/cart.js'));       // cart routes
 app.use('/api',          require('./api/checkout.js'));    // new checkout routes
+
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello from server!' });
+});
+
+// Admin SPA routing - fallback to admin/index.html
+app.get('/admin/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client-admin/build', 'index.html'));
+});
+
+// Customer SPA routing - fallback to customer/index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client-customer/build', 'index.html'));
 });
 
 // ── Error handling ───────────────────────────────────────────────────────────
@@ -61,3 +80,5 @@ app.use((err, req, res, next) => {
   console.error('Server error:', err);
   res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
 });
+
+module.exports = app; // For Vercel
