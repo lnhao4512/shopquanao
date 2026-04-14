@@ -1,6 +1,6 @@
-import axios from 'axios';
 import React, { Component } from 'react';
 import MyContext from '../contexts/MyContext';
+import { compressImage } from '../utils/ImageUtil';
 
 const ALL_SIZES = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
@@ -237,11 +237,21 @@ class ProductDetail extends Component {
     });
   }
 
-  previewImage(e) {
+  async previewImage(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (evt) => this.setState({ imgProduct: evt.target.result });
+    reader.onload = async (evt) => {
+        const base64 = evt.target.result;
+        try {
+            // Compress to max 1000px width/height for product images
+            const compressed = await compressImage(base64, 1000, 1000, 0.7);
+            this.setState({ imgProduct: compressed });
+        } catch (err) {
+            console.error('Compression error:', err);
+            this.setState({ imgProduct: base64 }); // fallback
+        }
+    };
     reader.readAsDataURL(file);
   }
 

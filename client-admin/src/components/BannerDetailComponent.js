@@ -1,6 +1,6 @@
-import axios from 'axios';
 import React, { Component } from 'react';
 import MyContext from '../contexts/MyContext';
+import { compressImage } from '../utils/ImageUtil';
 
 class BannerDetail extends Component {
   static contextType = MyContext;
@@ -162,11 +162,21 @@ class BannerDetail extends Component {
     });
   }
 
-  previewImage(e) {
+  async previewImage(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (evt) => this.setState({ imgBanner: evt.target.result });
+    reader.onload = async (evt) => {
+        const base64 = evt.target.result;
+        try {
+            // Compress to max 1600px width/height for banners
+            const compressed = await compressImage(base64, 1600, 1600, 0.8);
+            this.setState({ imgBanner: compressed });
+        } catch (err) {
+            console.error('Compression error:', err);
+            this.setState({ imgBanner: base64 }); // fallback
+        }
+    };
     reader.readAsDataURL(file);
   }
 
