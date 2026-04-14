@@ -1,7 +1,7 @@
 {
   "version": 2,
   "installCommand": "npm install && cd client-customer && npm install && cd ../client-admin && npm install",
-  "buildCommand": "cd client-customer && CI=false npm run build && cd ../client-admin && CI=false npm run build",
+  "buildCommand": "cd client-customer && CI=false npm run build && cd ../client-admin && CI=false npm run build && cp -r build ../client-customer/build/admin",
   "outputDirectory": "client-customer/build",
   "functions": {
     "api/index.js": {
