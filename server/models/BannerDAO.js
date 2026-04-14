@@ -6,7 +6,6 @@ const { store, oid, clone } = require('../utils/InMemoryStore');
 
 const BannerDAO = {
   async selectAll() {
-    if (!isMongoReady()) return clone(store.banners);
     const banners = await Models.Banner.find({}).exec();
     return banners;
   },
@@ -21,23 +20,12 @@ const BannerDAO = {
   },
 
   async insert(banner) {
-    if (!isMongoReady()) {
-      const created = { ...banner, _id: oid() };
-      store.banners.push(created);
-      return clone(created);
-    }
     banner._id = new mongoose.Types.ObjectId();
     const result = await Models.Banner.create(banner);
     return result;
   },
 
   async update(banner) {
-    if (!isMongoReady()) {
-      const idx = store.banners.findIndex((b) => b._id === String(banner._id));
-      if (idx === -1) return null;
-      store.banners[idx] = { ...store.banners[idx], ...banner };
-      return clone(store.banners[idx]);
-    }
     const result = await Models.Banner.findByIdAndUpdate(banner._id, banner, { new: true });
     return result;
   },

@@ -7,17 +7,12 @@ const { store, oid, clone } = require('../utils/InMemoryStore');
 const ProductDAO = {
   // ── SELECT ALL ────────────────────────────────────────────────────────────
   async selectAll() {
-    if (!isMongoReady()) return clone(store.products);
     const products = await Models.Product.find({}).exec();
     return products;
   },
 
   // ── SELECT BY ID ──────────────────────────────────────────────────────────
   async selectByID(_id) {
-    if (!isMongoReady()) {
-      const product = store.products.find((p) => p._id === String(_id));
-      return product ? clone(product) : null;
-    }
     const product = await Models.Product.findById(_id).exec();
     return product;
   },
@@ -70,13 +65,6 @@ const ProductDAO = {
 
   // ── SELECT BY KEYWORD ─────────────────────────────────────────────────────
   async selectByKeyword(keyword) {
-    if (!isMongoReady()) {
-      const q = String(keyword || '').toLowerCase();
-      const products = store.products.filter((p) =>
-        String(p.name || '').toLowerCase().includes(q)
-      );
-      return clone(products);
-    }
     const products = await Models.Product.find({
       name: { $regex: new RegExp(keyword, 'i') }
     }).exec();
@@ -85,16 +73,6 @@ const ProductDAO = {
 
   // ── INSERT ────────────────────────────────────────────────────────────────
   async insert(product) {
-    if (!isMongoReady()) {
-      const created = { 
-        ...product, 
-        _id: oid(), 
-        variants: product.variants || [],
-        totalStock: product.totalStock || 0
-      };
-      store.products.push(created);
-      return clone(created);
-    }
     product._id = new mongoose.Types.ObjectId();
     if (!Array.isArray(product.variants)) product.variants = [];
     const result = await Models.Product.create(product);
@@ -148,12 +126,6 @@ const ProductDAO = {
 
   // ── TOP NEW ───────────────────────────────────────────────────────────────
   async selectTopNew(top) {
-    if (!isMongoReady()) {
-      const products = [...store.products]
-        .sort((a, b) => b.cdate - a.cdate)
-        .slice(0, top);
-      return clone(products);
-    }
     const products = await Models.Product.find({})
       .sort({ cdate: -1 })
       .limit(top)

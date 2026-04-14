@@ -44,6 +44,17 @@ if (!process.env.VERCEL) {
   });
 }
 
+// ── Database Connection Middleware ───────────────────────────────────────────
+const { connectDB } = require('./utils/MongooseUtil');
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Database connection failed', error: err.message });
+  }
+});
+
 // ── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/admin',    require('./api/admin.js'));
 app.use('/api/customer', require('./api/customer.js'));
