@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server/index.js",
-      "use": "@vercel/node"
+  "installCommand": "npm install && cd client-customer && npm install && cd ../client-admin && npm install",
+  "buildCommand": "cd client-customer && npm run build && cd ../client-admin && npm run build",
+  "outputDirectory": "client-customer/build",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "server/**"
     }
-  ],
+  },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "server/index.js" },
-    { "source": "/admin/(.*)", "destination": "server/index.js" },
-    { "source": "/(.*)", "destination": "server/index.js" }
+    { "source": "/api/:path*", "destination": "/api/index.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
