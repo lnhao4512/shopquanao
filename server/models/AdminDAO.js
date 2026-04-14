@@ -1,4 +1,4 @@
-require('../utils/MongooseUtil');
+const { connectDB } = require('../utils/MongooseUtil');
 const Models = require('./Models');
 const mongoose = require('mongoose');
 const CryptoUtil = require('../utils/CryptoUtil');
@@ -7,6 +7,7 @@ const { store, oid, clone } = require('../utils/InMemoryStore');
 
 const AdminDAO = {
   async selectByUsernameAndPassword(username, password) {
+    await connectDB();
     if (!isMongoReady() && useInMemoryFallback()) {
       const admin = store.admins.find((a) => a.username === username && a.password === password);
       return admin ? clone(admin) : null;
@@ -19,11 +20,13 @@ const AdminDAO = {
     return null;
   },
   async selectAll() {
+    await connectDB();
     if (!isMongoReady() && useInMemoryFallback()) return clone(store.admins);
     const admins = await Models.Admin.find({});
     return admins;
   },
   async insert(username, password) {
+    await connectDB();
     if (!isMongoReady() && useInMemoryFallback()) {
       const admin = { _id: oid(), username, password };
       store.admins.push(admin);

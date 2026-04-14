@@ -19,13 +19,22 @@ if (!uri) {
   }
 }
 
-mongoose
-  .connect(uri)
-  .then(() => {
-    console.log("SUCCESS: Database connected successfully to " + (uri.includes('@') ? uri.split('@')[1] : uri));
-  })
-  .catch((err) => {
-    console.error("FATAL ERROR: Database connection failed!");
-    console.error("URI attempted:", uri.replace(/:([^@]+)@/, ':****@')); // Hide password in logs
-    console.error("Error Detail:", err.message);
-  });
+let conn = null;
+
+async function connectDB() {
+    if (conn) return conn;
+    
+    console.log("Starting database connection attempt...");
+    conn = await mongoose.connect(uri, {
+        bufferCommands: false, // Disable buffering to catch connection issues immediately
+        connectTimeoutMS: 15000,
+        socketTimeoutMS: 30000
+    });
+    console.log("SUCCESS: Database connected successfully.");
+    return conn;
+}
+
+// Still initiate connection at top level
+connectDB().catch(err => console.error("Initial connection failed:", err.message));
+
+module.exports = { connectDB };
