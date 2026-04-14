@@ -276,6 +276,20 @@ router.get('/all', async function (req, res) {
   }
 });
 
+// debug endpoint - check config
+router.get('/config-debug', (req, res) => {
+  const MyConstants = require('../utils/MyConstants');
+  res.json({
+    DB_SERVER: MyConstants.DB_SERVER,
+    DB_USER: MyConstants.DB_USER,
+    DB_DATABASE: MyConstants.DB_DATABASE,
+    DB_URI_SET: !!MyConstants.DB_URI,
+    HAS_PASS: !!MyConstants.DB_PASS,
+    VERCEL: !!process.env.VERCEL,
+    NODE_ENV: process.env.NODE_ENV
+  });
+});
+
 // test endpoint - create admin
 router.post('/create', async function (req, res) {
   try {
