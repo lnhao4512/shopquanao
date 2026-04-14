@@ -1,7 +1,7 @@
 {
   "version": 2,
   "installCommand": "npm install && cd client-customer && npm install && cd ../client-admin && npm install",
-  "buildCommand": "cd client-customer && npm run build && cd ../client-admin && npm run build",
+  "buildCommand": "cd client-customer && CI=false npm run build && cd ../client-admin && CI=false npm run build",
   "outputDirectory": "client-customer/build",
   "functions": {
     "api/index.js": {
@@ -10,6 +10,7 @@
   },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index.js" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

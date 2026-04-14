@@ -251,7 +251,7 @@ class CheckoutPage extends Component {
 
   // ── Manual payment verify ────────────────────────────────────────────────────
   async verifyPayment() {
-    const { orderId, token: _tok } = this.state;
+    const { orderId } = this.state;
     const { token } = this.context;
     if (!orderId) return;
 
@@ -360,8 +360,7 @@ class CheckoutPage extends Component {
   // ── Step 2: Address ──────────────────────────────────────────────────────────
   renderStep2() {
     const { firstName, lastName, street, building, city, district, ward,
-            phone, phoneError, districts, wards,
-            termAge, termData, termTerms } = this.state;
+            phone, phoneError, districts, wards } = this.state;
 
     return (
       <div className="checkout-form-section">
@@ -479,7 +478,7 @@ class CheckoutPage extends Component {
 
   // ── Step 3: Payment ─────────────────────────────────────────────────────────
   renderStep3() {
-    const { paymentMethod, qrCodeUrl, orderId, orderData,
+    const { paymentMethod, qrCodeUrl, orderId,
             loading, verifying, paymentDone, error, shippingFee } = this.state;
     const fmt = v => Number(v).toLocaleString('vi-VN') + ' ₫';
     const total = this.getCartTotal();
