@@ -14,7 +14,7 @@ const STEPS = [
 
 // ── Validators ────────────────────────────────────────────────────────────────
 const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-const isValidPhone = (v) => /^0[0-9]{8,10}$/.test(v); // Chấp nhận 9-11 số (bắt đầu bằng 0)
+const isValidPhone = (v) => /^0[0-9]{9}$/.test(v); // Yêu cầu đúng 10 số (bắt đầu bằng 0)
 
 class CheckoutPage extends Component {
   static contextType = MyContext;
@@ -182,7 +182,7 @@ class CheckoutPage extends Component {
   }
 
   handlePhoneChange(v) {
-    const phoneError = v && !isValidPhone(v) ? 'Số điện thoại không hợp lệ (9-11 chữ số, bắt đầu bằng 0)' : '';
+    const phoneError = v && !isValidPhone(v) ? 'Số điện thoại phải có 10 chữ số (bắt đầu bằng 0)' : '';
     this.setState({ phone: v, phoneError });
   }
 

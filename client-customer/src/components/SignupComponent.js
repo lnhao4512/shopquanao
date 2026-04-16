@@ -56,16 +56,17 @@ class Signup extends Component {
   // event-handlers
   btnSignupClick(e) {
     e.preventDefault();
-    const username = this.state.txtUsername;
-    const password = this.state.txtPassword;
-    const name = this.state.txtName;
-    const phone = this.state.txtPhone;
-    const email = this.state.txtEmail;
+    const { txtUsername: username, txtPassword: password, txtName: name, txtPhone: phone, txtEmail: email } = this.state;
+    
     if (username && password && name && phone && email) {
+      if (!/^0[0-9]{9}$/.test(phone)) {
+        alert('Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số (bắt đầu bằng 0).');
+        return;
+      }
       const account = { username, password, name, phone, email };
       this.apiSignup(account);
     } else {
-      alert('Please input username and password and name and phone and email');
+      alert('Vui lòng nhập đầy đủ thông tin đăng ký');
     }
   }
   // apis
