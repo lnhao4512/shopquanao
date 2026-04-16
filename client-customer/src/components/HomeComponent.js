@@ -23,18 +23,18 @@ class Home extends Component {
                 {/* HERO SECTION */}
                 <section className="eco-hero ads-container">
                     <div className="eco-hero__content">
-                        <div className="eco-hero__badge">✨ 100% Tự Nhiên & Bền Vững</div>
-                        <h1 className="eco-hero__title">Mộc-Thanh Khiết</h1>
+                        <div className="eco-hero__badge">{banner?.kicker || '✨ 100% Tự Nhiên & Bền Vững'}</div>
+                        <h1 className="eco-hero__title">{banner?.title || 'Mộc-Thanh Khiết'}</h1>
                         <p className="eco-hero__desc">
-                            Thời trang bền vững, thuần khiết từ thiên nhiên. Mang đến cho bạn những trang phục eco-friendly, thoải mái và đầy phong cách.
+                            {banner?.desc || 'Thời trang bền vững, thuần khiết từ thiên nhiên. Mang đến cho bạn những trang phục eco-friendly, thoải mái và đầy phong cách.'}
                         </p>
                         <div className="eco-hero__actions">
-                            <a className="eco-btn eco-btn--black" href="#new">Khám Phá Ngay</a>
-                            <a className="eco-btn eco-btn--outline" href="#story">Câu Chuyện Thương Hiệu</a>
+                            <a className="eco-btn eco-btn--black" href={banner?.primaryBtnLink || "#new"}>{banner?.primaryBtnText || 'Khám Phá Ngay'}</a>
+                            <a className="eco-btn eco-btn--outline" href={banner?.secondaryBtnLink || "#story"}>{banner?.secondaryBtnText || 'Câu Chuyện Thương Hiệu'}</a>
                         </div>
                     </div>
                     <div className="eco-hero__art">
-                        <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200" alt="Sustainable Fashion" />
+                        <img src={imgSrc || "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200"} alt={banner?.title || "Sustainable Fashion"} />
                     </div>
                 </section>
 
