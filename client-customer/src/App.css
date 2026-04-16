@@ -597,28 +597,49 @@ span.link { cursor: pointer; color: blue; text-decoration: underline; }
 .dropdown-title:hover { text-decoration: underline; }
 
 /* Cấp 3 list */
-.dropdown-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.dropdown-sub-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dropdown-sub-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.dropdown-item {
-  margin: 0;
-}
-
-.dropdown-link {
+.dropdown-sub-title {
   display: block;
   font-size: 14px;
-  color: #666;
+  font-weight: 700;
+  color: #111;
   text-decoration: none;
+  text-align: center;
   transition: color .12s;
+}
+.dropdown-sub-title:hover { color: #000; text-decoration: underline; }
+
+.dropdown-leaf-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdown-leaf-item {
   text-align: center;
 }
-.dropdown-link:hover {
+
+.dropdown-leaf-link {
+  font-size: 13px;
+  color: #71717a;
+  text-decoration: none;
+  transition: color .12s;
+}
+.dropdown-leaf-link:hover {
   color: #000;
 }
 

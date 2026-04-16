@@ -95,13 +95,22 @@ class Header extends Component {
                           <div key={c._id} className="dropdown-col">
                             <Link className="dropdown-title" to={`/product/category/${c._id}`} onClick={() => this.setState({hoverMenuId: null})}>{c.name}</Link>
                             {c.children && c.children.length > 0 && (
-                              <ul className="dropdown-list">
+                              <div className="dropdown-sub-container">
                                 {c.children.map(sub => (
-                                  <li key={sub._id} className="dropdown-item">
-                                    <Link className="dropdown-link" to={`/product/category/${sub._id}`} onClick={() => this.setState({hoverMenuId: null})}>{sub.name}</Link>
-                                  </li>
+                                  <div key={sub._id} className="dropdown-sub-group">
+                                    <Link className="dropdown-sub-title" to={`/product/category/${sub._id}`} onClick={() => this.setState({hoverMenuId: null})}>{sub.name}</Link>
+                                    {sub.children && sub.children.length > 0 && (
+                                      <ul className="dropdown-leaf-list">
+                                        {sub.children.map(leaf => (
+                                          <li key={leaf._id} className="dropdown-leaf-item">
+                                            <Link className="dropdown-leaf-link" to={`/product/category/${leaf._id}`} onClick={() => this.setState({hoverMenuId: null})}>{leaf.name}</Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
                                 ))}
-                              </ul>
+                              </div>
                             )}
                           </div>
                         ))}
