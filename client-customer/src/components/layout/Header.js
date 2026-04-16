@@ -74,71 +74,44 @@ class Header extends Component {
         <div className="ads-header__main">
           <div className="ads-container ads-header__mainInner">
             <Link to="/home" className="ads-logo" aria-label="Home">
-              <span className="ads-logo__mark" aria-hidden="true" />
-              <span className="ads-logo__text">SHOP</span>
+              <span className="ads-logo__icon" aria-hidden="true">🍃</span>
             </Link>
 
             <nav className="ads-nav" aria-label="Categories">
-              <Link className="ads-navLink" to="/home">New & Hot</Link>
-              {this.state.categories.map((c) => {
-                const hasChildren = c.children && c.children.length > 0;
-
-                if (hasChildren) {
-                  const isHovered = this.state.hoverMenuId === c._id;
-
-                  return (
-                    <div 
-                      key={c._id}
-                      style={{ position: 'static', display: 'flex', alignItems: 'center', height: '100%' }}
-                      onMouseEnter={() => this.handleMouseEnter(c._id)}
-                      onMouseLeave={() => this.handleMouseLeave()}
-                    >
-                      <Link 
-                        className="ads-navLink" 
-                        to={`/product/category/${c._id}`}
-                        style={{ background: isHovered ? '#f3f4f6' : '' }}
-                      >
-                        {c.name}
-                      </Link>
-                      
-                      {isHovered && (
-                        <div className="dropdown-mega">
-                            <div className="dropdown-mega__inner">
-                                <div className="dropdown-cols">
-                                    {c.children.map(lvl2 => (
-                                        <div key={lvl2._id} className="dropdown-col">
-                                            <Link className="dropdown-title" to={`/product/category/${lvl2._id}`} onClick={() => this.setState({hoverMenuId: null})}>{lvl2.name}</Link>
-                                            {lvl2.children && lvl2.children.length > 0 && (
-                                                <ul className="dropdown-list">
-                                                    {lvl2.children.map(lvl3 => (
-                                                        <li key={lvl3._id} className="dropdown-item">
-                                                            <Link className="dropdown-link" to={`/product/category/${lvl3._id}`} onClick={() => this.setState({hoverMenuId: null})}>{lvl3.name}</Link>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="dropdown-promo">
-                                    <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&q=80&w=400" alt={`${c.name} Collection`} className="dropdown-promo__img" />
-                                    <div className="dropdown-promo__text">
-                                        Bộ sưu tập {c.name} <br/>Khám phá ngay &rarr;
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                      )}
+              <a className="ads-navLink" href="/home#story">Thương Hiệu</a>
+              
+              {/* Dropdown for Sản Phẩm */}
+              <div 
+                style={{ position: 'static', display: 'flex', alignItems: 'center', height: '100%', cursor: 'pointer' }}
+                onMouseEnter={() => this.handleMouseEnter('prods_dropdown')}
+                onMouseLeave={() => this.handleMouseLeave()}
+              >
+                <Link className="ads-navLink" to="/home#new">Sản Phẩm</Link>
+                {this.state.hoverMenuId === 'prods_dropdown' && (
+                  <div className="dropdown-mega">
+                    <div className="dropdown-mega__inner">
+                      <div className="dropdown-cols">
+                        {this.state.categories.slice(0, 4).map(c => (
+                          <div key={c._id} className="dropdown-col">
+                            <Link className="dropdown-title" to={`/product/category/${c._id}`} onClick={() => this.setState({hoverMenuId: null})}>{c.name}</Link>
+                            {c.children && c.children.length > 0 && (
+                              <ul className="dropdown-list">
+                                {c.children.slice(0, 5).map(sub => (
+                                  <li key={sub._id} className="dropdown-item">
+                                    <Link className="dropdown-link" to={`/product/category/${sub._id}`} onClick={() => this.setState({hoverMenuId: null})}>{sub.name}</Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  );
-                } 
+                  </div>
+                )}
+              </div>
 
-                return (
-                  <Link key={c._id} className="ads-navLink" to={`/product/category/${c._id}`}>
-                    {c.name}
-                  </Link>
-                );
-              })}
+              <a className="ads-navLink" href="/home#philosophy">Triết Lý</a>
             </nav>
 
             <div className="ads-actions">

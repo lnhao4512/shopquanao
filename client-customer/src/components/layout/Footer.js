@@ -31,7 +31,7 @@ class Footer extends Component {
         </div>
         <div className="ads-footer__bottom">
           <div className="ads-container ads-footer__bottomInner">
-            <span className="ads-footer__muted">© {new Date().getFullYear()} SHOP</span>
+            <span className="ads-footer__muted">© {new Date().getFullYear()} Mộc</span>
             <span className="ads-footer__muted">Privacy · Terms</span>
           </div>
         </div>
