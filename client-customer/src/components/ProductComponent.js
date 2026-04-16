@@ -31,6 +31,8 @@ class Product extends Component {
             this.apiGetProductsByCatID(params.cid);
         } else if (params.keyword) {
             this.apiGetProductsByKeyword(params.keyword);
+        } else {
+            this.apiGetAllProducts();
         }
     }
     componentDidUpdate(prevProps) { // changed: /product/...
@@ -42,7 +44,15 @@ class Product extends Component {
         }
     }
     // apis
-    apiGetProductsByCatID(cid) {
+    apiGetAllProducts() {
+        axios.get('/api/customer/products').then((res) => {
+            const result = res.data;
+            this.setState({ products: result });
+        }).catch((err) => {
+            console.error('Get all products failed:', err.message);
+            this.setState({ products: [] });
+        });
+    }    apiGetProductsByCatID(cid) {
         axios.get('/api/customer/products/category/' + cid).then((res) => {
             const result = res.data;
             this.setState({ products: result });

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import ProductCard from './ui/ProductCard';
 
 class Home extends Component {
@@ -94,7 +95,7 @@ class Home extends Component {
                 </section>
 
                 <div className="text-center" style={{ marginTop: 40 }}>
-                    <a className="eco-btn eco-btn--black" href="/products">Xem Tất Cả Sản Phẩm</a>
+                    <Link className="eco-btn eco-btn--black" to="/products">Xem Tất Cả Sản Phẩm</Link>
                 </div>
             </div>
         );

@@ -111,6 +111,16 @@ router.get('/categories/tree', async function (req, res) {
     }
 });
 
+// product - all
+router.get('/products', async function (req, res) {
+    try {
+        const products = await ProductDAO.selectAll();
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // product
 router.get('/products/new', async function (req, res) {
     const products = await ProductDAO.selectTopNew(3);
