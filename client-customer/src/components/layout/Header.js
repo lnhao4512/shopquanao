@@ -86,17 +86,17 @@ class Header extends Component {
                 onMouseEnter={() => this.handleMouseEnter('prods_dropdown')}
                 onMouseLeave={() => this.handleMouseLeave()}
               >
-                <Link className="ads-navLink" to="/home#new">Sản Phẩm</Link>
+                <Link className={`ads-navLink ${this.state.hoverMenuId === 'prods_dropdown' ? 'active' : ''}`} to="/products">Sản Phẩm</Link>
                 {this.state.hoverMenuId === 'prods_dropdown' && (
                   <div className="dropdown-mega">
                     <div className="dropdown-mega__inner">
                       <div className="dropdown-cols">
-                        {this.state.categories.slice(0, 4).map(c => (
+                        {this.state.categories.filter(c => !c.parentId).slice(0, 4).map(c => (
                           <div key={c._id} className="dropdown-col">
                             <Link className="dropdown-title" to={`/product/category/${c._id}`} onClick={() => this.setState({hoverMenuId: null})}>{c.name}</Link>
                             {c.children && c.children.length > 0 && (
                               <ul className="dropdown-list">
-                                {c.children.slice(0, 5).map(sub => (
+                                {c.children.map(sub => (
                                   <li key={sub._id} className="dropdown-item">
                                     <Link className="dropdown-link" to={`/product/category/${sub._id}`} onClick={() => this.setState({hoverMenuId: null})}>{sub.name}</Link>
                                   </li>

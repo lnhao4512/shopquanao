@@ -1,85 +1,104 @@
-# BÁO CÁO ĐỒ ÁN: XÂY DỰNG HỆ THỐNG THƯƠNG MẠI ĐIỆN TỬ SHOPQUANAO
-
-## 1. GIỚI THIỆU ĐỀ TÀI VÀ THÀNH VIÊN NHÓM
-
-### Giới thiệu đề tài
-Đề tài tập trung vào việc xây dựng một website bán lẻ quần áo thời trang hiện đại, hỗ trợ đầy đủ các tính năng từ quản lý sản phẩm cho đến quy trình đặt hàng và thanh toán trực tuyến. Hệ thống được thiết kế với hai phân hệ chính:
-- **Trang khách hàng:** Nơi người dùng xem sảm phẩm, quản lý giỏ hàng và đặt hàng.
-- **Trang Admin:** Dành cho quản trị viên quản lý danh mục, sản phẩm, đơn hàng và các chiến dịch banner.
-
-### Thành viên nhóm
-1. **Lương Nhật Hào** - MSSV: (Cập nhật MSSV) - Vai trò: Full-stack Developer, Trưởng nhóm.
-2. (Cập nhật tên thành viên) - MSSV: (Cập nhật MSSV) - Vai trò: (Cập nhật vai trò)
-3. (Cập nhật tên thành viên) - MSSV: (Cập nhật MSSV) - Vai trò: (Cập nhật vai trò)
+# BÁO CÁO CHI TIẾT DỰ ÁN CUỐI KHÓA: MỘC-ECOPURE
 
 ---
 
-## 2. TRÌNH BÀY CÁCH TẠO SERVER VÀ KẾT NỐI MONGODB
+## 1. GIỚI THIỆU ĐỀ TÀI VÀ THÀNH VIÊN NHÓM
 
-### Khởi tạo Server
-Server được xây dựng dựa trên nền tảng **Node.js** và framework **Express**. Các bước thực hiện bao gồm:
-- Sử dụng `express` để quản lý các request và routing.
-- Cấu hình `body-parser` để xử lý dữ liệu JSON và `cors` để hỗ trợ truy cập từ các origin khác nhau.
-- Tích hợp `dotenv` để quản lý bảo mật các biến môi trường như cổng kết nối và chuỗi kết nối Database.
+### 1.1 Đề tài dự án
+**Tên dự án:** Mộc-EcoPure E-Commerce.
+**Lĩnh vực:** Thương mại điện tử chuyên biệt về thời trang bền vững (Eco-friendly Fashion).
+**Mục tiêu:** Xây dựng một nền tảng mua sắm hiện đại, tinh tế, truyền tải thông điệp bảo vệ môi trường thông qua các sản phẩm vải hữu cơ và quy trình sản xuất thủ công.
 
-### Kết nối MongoDB
-Nhóm sử dụng thư viện **Mongoose** để tương tác với cơ sở dữ liệu MongoDB Atlas. 
-- **Cấu hình kết nối:** Được thực hiện tại `server/utils/MongooseUtil.js`.
-- **Cơ chế:** Sử dụng hàm `mongoose.connect(uri)` với chuỗi kết nối chứa thông tin định danh (User/Password).
-- **Kết nối bền vững:** Được thiết lập trong entry point của server để đảm bảo dữ liệu luôn sẵn sàng trước khi xử lý request.
+### 1.2 Thành viên nhóm
+*   **Trưởng nhóm:** Lương Nhật Hào.
+*   **Thành viên:** (Danh sách các thành viên tham gia xây dựng Frontend, Backend và Database).
+
+---
+
+## 2. CÁCH TẠO SERVER VÀ KẾT NỐI VỚI MONGODB
+
+### 2.1 Khởi tạo Server (NodeJS & Express)
+Server được xây dựng bằng framework **ExpressJS** với các bước chính:
+*   Sử dụng `express()` để khởi tạo ứng dụng.
+*   Sử dụng middleware `body-parser` để xử lý dữ liệu JSON và URL-encoded với giới hạn dung lượng lên đến 50MB (phục vụ việc upload ảnh base64).
+*   Thiết lập **CORS** để cho phép Frontend tương tác với Backend qua các URL khác nhau.
+*   Tích hợp **Socket.io** trên môi trường local để hỗ trợ tương tác thời gian thực.
+
+### 2.2 Kết nối MongoDB (Mongoose)
+Nhóm sử dụng thư viện **Mongoose** để quản lý kết nối và định nghĩa cấu trúc dữ liệu:
+*   **URI Connection:** Dữ liệu kết nối được lưu trong file `MyConstants.js` (hoặc biến môi trường `.env`). Hệ thống tự động phân biệt giữa kết nối **MongoDB Atlas (Cloud)** và **MongoDB Local**.
+*   **Cơ chế Singleton:** Sử dụng biến `cached` để lưu trữ kết nối, tránh việc khởi tạo lại kết nối nhiều lần khi Serverless function (như trên Vercel) được triệu gọi.
+*   **Hàm `connectDB`:** Hàm bất đồng bộ (async/await) để đảm bảo kết nối thành công trước khi Server xử lý các yêu cầu API.
 
 ---
 
 ## 3. GIỚI THIỆU DATABASE CỦA NHÓM
+Cơ sở dữ liệu được thiết kế theo dạng phi quan hệ (NoSQL) với 5 Collections chính:
 
-Hệ thống sử dụng MongoDB (NoSQL) với các Collection chính được định nghĩa trong `server/models/Models.js`:
-- **Categories:** Lưu trữ thông tin danh mục sản phẩm.
-- **Products:** Lưu trữ thông tin chi tiết sản phẩm (tên, giá, hình ảnh, kích thước, số lượng tồn).
-- **Customers:** Lưu trữ thông tin tài khoản người dùng, email kích hoạt và trạng thái hoạt động.
-- **Orders:** Lưu trữ thông tin đơn hàng, danh sách sản phẩm, địa chỉ giao hàng và trạng thái thanh toán.
-- **Banners:** Lưu trữ các chiến dịch quảng cáo hiển thị tại trang chủ.
+1.  **Categories (Danh mục):** Lưu tên danh mục và mối quan hệ cha-con (`parentId`) để tạo menu đa cấp.
+2.  **Products (Sản phẩm):** Lưu thông tin tên, giá, hình ảnh, ngày tạo, liên kết tới danh mục và danh sách các biến thể (size/số lượng tồn kho).
+3.  **Customers (Khách hàng):** Lưu thông tin tài khoản (username/password), thông tin cá nhân (name, phone, email) và trạng thái kích hoạt tài khoản.
+4.  **Orders (Đơn hàng):** Lưu thông tin ngày đặt, tổng tiền, trạng thái (PENDING/APPROVED/CANCELED), thông tin khách hàng và danh sách sản phẩm trong giỏ hàng.
+5.  **Banners (Poster):** Lưu thông tin nội dung quảng cáo động trên trang chủ (Title, Description, Image, Link).
 
 ---
 
 ## 4. NHỮNG CHỨC NĂNG API ĐÃ VIẾT
 
-Nhóm đã triển khai hệ thống RESTful API toàn diện tại thư mục `server/api/`:
-- **Customer API:** 
-    - Lấy danh sách sản phẩm theo danh mục, sản phẩm mới, sản phẩm tìm kiếm.
-    - Đăng ký (gửi mã kích hoạt qua email), Đăng nhập, Quản lý thông tin cá nhân.
-    - Thêm/Xóa sản phẩm vào giỏ hàng.
-- **Admin API:** 
-    - Quản lý CRUD (Thêm, Đọc, Sửa, Xóa) cho Danh mục, Sản phẩm, Banner.
-    - Quản lý và cập nhật trạng thái đơn hàng (Duyệt/Hủy).
-    - Quản lý danh sách khách hàng.
-- **Payment API:** 
-    - Tích hợp tạo mã QR thanh toán tự động (VietQR).
-    - API kiểm tra xác nhận thanh toán thành công.
+Hệ thống API được phân chia rõ ràng thành các module:
+
+### 4.1 API Khách hàng (Customer)
+*   **Auth:** `/api/customer/signup`, `/api/customer/login`, `/api/customer/active`.
+*   **Product:** 
+    *   Lấy sản phẩm mới nhất: `/api/customer/products/new`.
+    *   Lấy sản phẩm bán chạy: `/api/customer/products/hot`.
+    *   Lấy toàn bộ sản phẩm: `/api/customer/products`.
+    *   Lấy theo danh mục: `/api/customer/products/category/:cid`.
+    *   Tìm kiếm: `/api/customer/products/search/:keyword`.
+*   **Category:** `/api/customer/categories/tree` (lấy dạng cây cho menu).
+*   **Order:** Checkout đơn hàng (`/api/customer/checkout`) và xem lịch sử đơn hàng.
+*   **Banner:** Lấy dữ liệu poster trang chủ (`/api/customer/banners`).
+
+### 4.2 API Quản trị (Admin)
+*   Quản lý danh mục (CRUD): `/api/admin/categories`.
+*   Quản lý sản phẩm (CRUD): `/api/admin/products`.
+*   Quản lý đơn hàng: Duyệt đơn, cập nhật trạng thái.
+*   Quản lý Banner: Thêm/Sửa/Xóa poster trang chủ.
 
 ---
 
-## 5. KIẾN THỨC VỀ REACTJS ĐÃ ÁP DỤNG
+## 5. KIẾN THỨC REACTJS ĐÃ ÁP DỤNG
 
-Nhóm đã sử dụng ReactJS để phát triển hai ứng dụng Single Page Application (SPA) với các kiến thức nâng cao:
-- **Class Components & Lifecycle:** Sử dụng `componentDidMount`, `componentWillUnmount` để quản lý việc fetch dữ liệu và kết nối Socket.
-- **React Router:** Sử dụng `react-router-dom` để điều hướng trang mà không cần tải lại trình duyệt.
-- **Context API:** Sử dụng `MyContext` để quản lý trạng thái chung (Global State) như thông tin đăng nhập và giỏ hàng.
-- **Axios:** Thư viện gọi API chính với cấu hình header `x-access-token` để xác thực người dùng.
-- **State Management:** Quản lý dữ liệu động trong component như form input, danh sách sản phẩm và trạng thái tải trang (loading).
+Nhóm đã sử dụng các kiến thức cốt lõi của ReactJS để xây dựng giao diện:
+
+1.  **Vòng đời Component (Lifecycle):**
+    *   Nhóm chủ yếu sử dụng `componentDidMount` trong Class Components để thực hiện các yêu cầu API ngay sau khi component được render lần đầu (ví dụ: lấy danh sách sản phẩm, banner).
+    *   Sử dụng `componentDidUpdate` để phản hồi các thay đổi của `props` (ví dụ: khi người dùng chọn một danh mục khác trên URL, danh sách sản phẩm sẽ được fetch lại).
+2.  **Hệ thống Router (React Router DOM):**
+    *   Sử dụng `<BrowserRouter>`, `<Routes>` và `<Route>` để định nghĩa các đường dẫn như `/home`, `/product`, `/mycart`, `/login`...
+    *   Sử dụng `useParams` (thông qua `withRouter` helper) để lấy ID sản phẩm hoặc ID danh mục từ URL.
+3.  **Tương tác giao diện (Events):**
+    *   **onClick:** Sử dụng để xử lý việc chọn sản phẩm, thêm vào giỏ hàng, chuyển trang, hoặc đóng mở dropdown.
+    *   **onChange:** Sử dụng trong các form tìm kiếm và form nhập liệu (Login/Signup) để đồng bộ dữ liệu vào `state` của component.
+    *   **onMouseEnter/onMouseLeave:** Sử dụng để tạo hiệu ứng menu đa cấp (Mega Menu) chuyên nghiệp.
 
 ---
 
-## 6. CHỨC NĂNG ỨNG DỤNG ĐÃ LÀM ĐƯỢC
+## 6. NHỮNG CHỨC NĂNG ỨNG DỤNG ĐÃ LÀM ĐƯỢC
 
-1. **Giao diện người dùng hiện đại:** Sử dụng CSS cao cấp với hiệu ứng Glassmorphism và layout Adidas-style.
-2. **Hệ thống Banner động:** Admin có thể upload ảnh banner trực tiếp để thay đổi diện mạo trang chủ (Hero section).
-3. **Quản lý kho hàng chuyên sâu:** Hỗ trợ quản lý sản phẩm theo kích thước (Size) và số lượng tồn kho từng loại.
-4. **Quy trình Thanh toán tối ưu:** 
-    - Hệ thống tính phí ship động.
-    - Tích hợp thanh toán QR ngân hàng tự động.
-    - Xác nhận đơn hàng qua Email Marketing.
-5. **Trang Quản trị thông minh:** 
-    - Dashboard thống kê trực quan.
-    - Hệ thống tìm kiếm và lọc dữ liệu nâng cao.
-    - Hỗ trợ xem trước (Preview) hình ảnh sản phẩm ngay khi đăng tải.
-6. **Deploy:** Ứng dụng đã được deploy hoàn chỉnh lên Vercel để sử dụng trực tuyến.
+Dự án đã hoàn thành đầy đủ các chức năng của một website E-commerce thực thụ:
+
+### 6.1 Phía Khách hàng (Customer Site)
+*   Giao diện thiết kế theo concept **Premium Eco-brand** (màu trắng tinh khôi, bo góc mềm mại).
+*   Hệ thống Menu đa cấp thông minh.
+*   Banner động cho phép thay đổi Poster trang chủ linh hoạt.
+*   Luồng mua hàng trọn gói: Chọn size -> Giỏ hàng -> Thanh toán qua VietQR.
+*   Hệ thống xác thực: Đăng ký, đăng nhập và kích hoạt tài khoản qua Email.
+
+### 6.2 Phía Quản trị (Admin Dashboard)
+*   Thống kê và quản lý toàn bộ dữ liệu (Sản phẩm, Danh mục, Đơn hàng, Banner).
+*   Tính năng upload và nén ảnh tự động để tối ưu dung lượng server.
+*   Hệ thống duyệt đơn hàng chuyển đổi trạng thái (Chờ duyệt -> Đã duyệt).
+
+---
+**Dự án được xây dựng với sự tâm huyết để mang lại trải nghiệm mua sắm tốt nhất và truyền tải giá trị của sống xanh tới khách hàng.**
