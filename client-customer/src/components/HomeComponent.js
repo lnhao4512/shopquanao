@@ -64,7 +64,7 @@ class Home extends Component {
                 </section>
 
                 {/* PHILOSOPHY SECTION */}
-                <section className="eco-philosophy ads-container">
+                <section id="philosophy" className="eco-philosophy ads-container">
                     <div className="eco-philosophy__art">
                         <img src="https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1000" alt="Eco Philosophy" />
                     </div>
