@@ -43,7 +43,7 @@ class Header extends Component {
         <div className="ads-header__top">
           <div className="ads-container ads-header__topInner">
             <div className="ads-header__topLeft">
-              <span className="ads-topNote">FREE SHIPPING over 999k</span>
+              <span className="ads-topNote">🌿 THỜI TRANG BỀN VỮNG & THÂN THIỆN MÔI TRƯỜNG</span>
             </div>
             <div className="ads-header__topRight">
               {token ? (

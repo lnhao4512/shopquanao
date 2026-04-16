@@ -29,7 +29,7 @@ a{ color:inherit; text-decoration:none; }
 /* Header */
 .ads-header{ position:sticky; top:0; z-index:20; background:var(--ads-white); border-bottom:1px solid var(--ads-border); }
 .ads-header__top{ background:var(--ads-black); color:var(--ads-white); }
-.ads-header__topInner{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; font-size:12px; }
+.ads-header__topInner{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; font-size:14px; }
 .ads-topNote{ letter-spacing:.12em; text-transform:uppercase; opacity:.9; }
 .ads-topLink{ color:var(--ads-white); opacity:.92; }
 .ads-topLink:hover{ opacity:1; text-decoration:underline; }
