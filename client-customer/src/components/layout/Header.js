@@ -91,7 +91,7 @@ class Header extends Component {
                   <div className="dropdown-mega">
                     <div className="dropdown-mega__inner">
                       <div className="dropdown-cols">
-                        {this.state.categories.filter(c => !c.parentId).slice(0, 4).map(c => (
+                        {this.state.categories.filter(c => !c.parentId).slice(0, 6).map(c => (
                           <div key={c._id} className="dropdown-col">
                             <Link className="dropdown-title" to={`/product/category/${c._id}`} onClick={() => this.setState({hoverMenuId: null})}>{c.name}</Link>
                             {c.children && c.children.length > 0 && (
