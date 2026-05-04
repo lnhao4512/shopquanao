@@ -8,13 +8,26 @@ const { store, oid, clone } = require('../utils/InMemoryStore');
 const AdminDAO = {
   async selectByUsernameAndPassword(username, password) {
     await connectDB();
+    const bcrypt = require('bcryptjs');
     if (!isMongoReady() && useInMemoryFallback()) {
-      const admin = store.admins.find((a) => a.username === username && a.password === password);
+      const admin = store.admins.find((a) => {
+        if (a.username !== username) return false;
+        if (a.password && (a.password.startsWith('$2a$') || a.password.startsWith('$2b$'))) {
+          return bcrypt.compareSync(String(password), a.password);
+        }
+        return a.password === password;
+      });
       return admin ? clone(admin) : null;
     }
     const query = { username: username };
     const admin = await Models.Admin.findOne(query).exec();
     if (!admin) return null;
+
+    if (admin.password && (admin.password.startsWith('$2a$') || admin.password.startsWith('$2b$'))) {
+      if (bcrypt.compareSync(String(password), admin.password)) return admin;
+      return null;
+    }
+
     const md5Password = CryptoUtil.md5(String(password));
     if (admin.password === password || admin.password === md5Password) return admin;
     return null;
@@ -27,15 +40,19 @@ const AdminDAO = {
   },
   async insert(username, password) {
     await connectDB();
+    const bcrypt = require('bcryptjs');
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(String(password), salt);
+
     if (!isMongoReady() && useInMemoryFallback()) {
-      const admin = { _id: oid(), username, password };
+      const admin = { _id: oid(), username, password: hashedPassword };
       store.admins.push(admin);
       return clone(admin);
     }
     const admin = new Models.Admin({
       _id: new mongoose.Types.ObjectId(),
       username: username,
-      password: password
+      password: hashedPassword
     });
     await admin.save();
     return admin;

@@ -14,6 +14,12 @@ const CustomerDAO = {
     return customer;
   },
   async insert(customer) {
+    const bcrypt = require('bcryptjs');
+    if (customer.password) {
+      const salt = bcrypt.genSaltSync(10);
+      customer.password = bcrypt.hashSync(String(customer.password), salt);
+    }
+
     if (!isMongoReady() && useInMemoryFallback()) {
       const created = { ...customer, _id: oid() };
       store.customers.push(created);
@@ -37,14 +43,27 @@ const CustomerDAO = {
     return result;
   },
   async selectByUsernameAndPassword(username, password) {
+    const bcrypt = require('bcryptjs');
     if (!isMongoReady() && useInMemoryFallback()) {
       const md5Password = CryptoUtil.md5(String(password));
-      const customer = store.customers.find((c) => c.username === username && (c.password === password || c.password === md5Password));
+      const customer = store.customers.find((c) => {
+        if (c.username !== username) return false;
+        if (c.password && (c.password.startsWith('$2a$') || c.password.startsWith('$2b$'))) {
+          return bcrypt.compareSync(String(password), c.password);
+        }
+        return c.password === password || c.password === md5Password;
+      });
       return customer ? clone(customer) : null;
     }
     const query = { username: username };
     const customer = await Models.Customer.findOne(query).exec();
     if (!customer) return null;
+    
+    if (customer.password && (customer.password.startsWith('$2a$') || customer.password.startsWith('$2b$'))) {
+      if (bcrypt.compareSync(String(password), customer.password)) return customer;
+      return null;
+    }
+
     const md5Password = CryptoUtil.md5(String(password));
     if (customer.password === password || customer.password === md5Password) return customer;
     return null;
